@@ -12,8 +12,8 @@ class ContrastiveModel(torch.nn.Module):
         self.translation_transformer = DistilBertModel.from_pretrained('distilbert-base-german-cased')
         self.original_linear_1 = torch.nn.Linear(201*768, 512)
         self.translation_linear_1 = torch.nn.Linear(201*768, 512)
-        self.original_linear_2 = torch.nn.Linear(201*768, 256)
-        self.translation_linear_2 = torch.nn.Linear(201*768, 256)
+        self.original_linear_2 = torch.nn.Linear(512, 256)
+        self.translation_linear_2 = torch.nn.Linear(512, 256)
         self.original_norm = torch.nn.BatchNorm1d(256)
         self.translation_norm = torch.nn.BatchNorm1d(256)
 
