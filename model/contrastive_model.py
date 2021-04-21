@@ -16,7 +16,7 @@ class ContrastiveModel(torch.nn.Module):
         self.translation_linear_2 = torch.nn.Linear(512, 256)
         self.original_norm = torch.nn.BatchNorm1d(256)
         self.translation_norm = torch.nn.BatchNorm1d(256)
-        self.dropout = nn.Dropout(p=0.5)
+        self.dropout = torch.nn.Dropout(p=0.5)
 
         self.final_linear_1 = torch.nn.Linear(512, 256)
         self.final_linear_2 = torch.nn.Linear(256, 1)

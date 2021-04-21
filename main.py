@@ -22,7 +22,7 @@ train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False)
 optim = AdamW(model.parameters(), lr=1e-4)
 
-num_epochs = 25
+num_epochs = 10
 best_model_wts = copy.deepcopy(model.state_dict())
 best_loss = np.inf
 for epoch in range(num_epochs):
