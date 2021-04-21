@@ -16,8 +16,10 @@ class ContrastiveModel(torch.nn.Module):
         self.translation_linear_2 = torch.nn.Linear(512, 256)
         self.original_norm = torch.nn.BatchNorm1d(256)
         self.translation_norm = torch.nn.BatchNorm1d(256)
+        self.dropout = nn.Dropout(p=0.5)
 
-        self.final_linear = torch.nn.Linear(512, 1)
+        self.final_linear_1 = torch.nn.Linear(512, 256)
+        self.final_linear_2 = torch.nn.Linear(256, 1)
 
     def forward(self, original_input_ids=None, original_attention_mask=None, translation_input_ids=None, translation_attention_mask=None):
         """
@@ -31,5 +33,5 @@ class ContrastiveModel(torch.nn.Module):
         original_encoded = torch.nn.ReLU()(self.original_norm(self.original_linear_2(self.original_linear_1(torch.flatten(original_attention, start_dim=1)))))
         translation_encoded = torch.nn.ReLU()(self.translation_norm(self.translation_linear_2(self.translation_linear_1(torch.flatten(translation_attention, start_dim=1)))))
 
-        y_pred = self.final_linear(torch.cat([original_encoded, translation_encoded], 1))
+        y_pred = self.final_linear_2(torch.nn.ReLU()(self.dropout(self.final_linear_1(torch.cat([original_encoded, translation_encoded], 1)))))
         return y_pred
