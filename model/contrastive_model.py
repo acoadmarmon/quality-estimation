@@ -1,5 +1,5 @@
 import torch
-from transformers import DistilBertModel
+from transformers import DistilBertModel, BertModel
 
 class ContrastiveModel(torch.nn.Module):
     def __init__(self):
