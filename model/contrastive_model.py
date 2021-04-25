@@ -9,7 +9,7 @@ class ContrastiveModel(torch.nn.Module):
         """
         super(ContrastiveModel, self).__init__()
         self.original_transformer = DistilBertModel.from_pretrained('distilbert-base-uncased')
-        self.translation_transformer = BERT.from_pretrained('bert-base-chinese')
+        self.translation_transformer = BertModel.from_pretrained('bert-base-chinese')
         self.original_linear_1 = torch.nn.Linear(201*768, 256)
         self.translation_linear_1 = torch.nn.Linear(201*768, 256)
         self.original_norm = torch.nn.BatchNorm1d(256)
