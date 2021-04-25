@@ -1,4 +1,5 @@
 import data_loader.en_de_data_loader as dl
+import data_loader.en_zh_data_loader as enzhdl
 import model.contrastive_model as cm
 
 import torch
@@ -10,10 +11,10 @@ import numpy as np
 
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
-train_embeddings, test_embeddings = dl.get_train_test_embeddings()
+train_embeddings, test_embeddings = enzhdl.get_train_test_embeddings()
 
-train_dataset = dl.EnDeDataset(train_embeddings[0][0], train_embeddings[0][1], train_embeddings[1])
-test_dataset = dl.EnDeDataset(test_embeddings[0][0], test_embeddings[0][1], test_embeddings[1])
+train_dataset = enzhdl.EnZhDataset(train_embeddings[0][0], train_embeddings[0][1], train_embeddings[1])
+test_dataset = enzhdl.EnZhDataset(test_embeddings[0][0], test_embeddings[0][1], test_embeddings[1])
 dataset_sizes = {'train': len(train_dataset), 'val': len(test_dataset)}
 
 model = cm.ContrastiveModel().to(device)
@@ -22,7 +23,7 @@ train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False)
 optim = AdamW(model.parameters(), lr=1e-4)
 
-num_epochs = 10
+num_epochs = 25
 best_model_wts = copy.deepcopy(model.state_dict())
 best_loss = np.inf
 for epoch in range(num_epochs):

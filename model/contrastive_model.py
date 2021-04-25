@@ -9,14 +9,12 @@ class ContrastiveModel(torch.nn.Module):
         """
         super(ContrastiveModel, self).__init__()
         self.original_transformer = DistilBertModel.from_pretrained('distilbert-base-uncased')
-        self.translation_transformer = DistilBertModel.from_pretrained('distilbert-base-german-cased')
-        self.original_linear_1 = torch.nn.Linear(201*768, 512)
-        self.translation_linear_1 = torch.nn.Linear(201*768, 512)
-        self.original_linear_2 = torch.nn.Linear(512, 256)
-        self.translation_linear_2 = torch.nn.Linear(512, 256)
+        self.translation_transformer = BERT.from_pretrained('bert-base-chinese')
+        self.original_linear_1 = torch.nn.Linear(201*768, 256)
+        self.translation_linear_1 = torch.nn.Linear(201*768, 256)
         self.original_norm = torch.nn.BatchNorm1d(256)
         self.translation_norm = torch.nn.BatchNorm1d(256)
-        self.dropout = torch.nn.Dropout(p=0.5)
+        self.dropout = torch.nn.Dropout(p=0.3)
 
         self.final_linear_1 = torch.nn.Linear(512, 256)
         self.final_linear_2 = torch.nn.Linear(256, 1)
@@ -30,8 +28,8 @@ class ContrastiveModel(torch.nn.Module):
         original_attention = self.original_transformer(input_ids=original_input_ids, attention_mask=original_attention_mask)['last_hidden_state']
         translation_attention = self.translation_transformer(input_ids=translation_input_ids, attention_mask=translation_attention_mask)['last_hidden_state']
 
-        original_encoded = torch.nn.ReLU()(self.original_norm(self.original_linear_2(self.original_linear_1(torch.flatten(original_attention, start_dim=1)))))
-        translation_encoded = torch.nn.ReLU()(self.translation_norm(self.translation_linear_2(self.translation_linear_1(torch.flatten(translation_attention, start_dim=1)))))
+        original_encoded = torch.nn.ReLU()(self.original_norm(self.original_linear_1(torch.flatten(original_attention, start_dim=1))))
+        translation_encoded = torch.nn.ReLU()(self.translation_norm(self.translation_linear_1(torch.flatten(translation_attention, start_dim=1))))
 
-        y_pred = self.final_linear_2(torch.nn.ReLU()(self.dropout(self.final_linear_1(torch.cat([original_encoded, translation_encoded], 1)))))
+        y_pred = self.final_linear_2(torch.nn.ReLU()(self.final_linear_1(torch.cat([original_encoded, translation_encoded], 1))))
         return y_pred
