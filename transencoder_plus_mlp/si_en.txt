@@ -1,0 +1,4 @@
+tensor(5.1310, device='cuda:0', grad_fn=<AddBackward0>)
+tensor(0.6414, device='cuda:0', grad_fn=<DivBackward0>)
+-0.018260408030663866
+0.6703729295465346
